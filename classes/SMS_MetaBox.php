@@ -32,6 +32,7 @@ class SMS_MetaBox {
 		$numbers = self::get_deals_numbers( $post->ID, FALSE );
 		printf( '<label for="">%s</label>', gb__( 'Numbers to send after purchase. Comma seperated list.' ) );
 		printf( '<input type="text" value="%s" name="gbs_sms_checkout_notes" />', $numbers );
+		printf( '<p class="description">%s</p>', gb__( 'Numbers must be the complete and 11 numbers in length, e.g. 18057654321.' ) );
 		//prp( self::get_deals_numbers_array($post->ID) );
 
 	}

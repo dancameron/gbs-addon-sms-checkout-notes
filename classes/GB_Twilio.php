@@ -25,20 +25,29 @@ class GB_Twilio extends Group_Buying_Controller {
 	public static function send_sms( $mobile_number, $message ) {
 
 		$formatted_mobile_number = '+'.preg_replace( "/[^0-9]/", '', $mobile_number );
-		if ( strlen( $formatted_mobile_number ) < 10 ) {
+		if ( strlen( $formatted_mobile_number ) < 12 ) {
 			return;
 		}
 
-		$twilio_client = self::init_twilio();
+		try {
+			$twilio_client = self::init_twilio();
 
-		SMS_Options::init();
-		$twilio_number = '+'.preg_replace( "/[^0-9]/", '', SMS_Options::$twilio_number ); // Your Twilio auth token
+			SMS_Options::init();
+			$twilio_number = '+'.preg_replace( "/[^0-9]/", '', SMS_Options::$twilio_number ); // Your Twilio auth token
 
-		$message = $twilio_client->account->sms_messages->create(
-			$twilio_number, // From a Twilio number in your account
-			$formatted_mobile_number,
-			$message
-		);
+			$message = $twilio_client->account->sms_messages->create(
+				$twilio_number, // From a Twilio number in your account
+				$formatted_mobile_number,
+				$message
+			);
+
+		} catch (Exception $e) {
+			error_log( "exception caught: " . print_r( $e->getMessage(), true ) );
+			return FALSE;
+		}
+
 		return $message;
+
+
 	}
 }
