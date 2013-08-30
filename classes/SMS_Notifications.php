@@ -16,7 +16,7 @@ class SMS_Notifications extends Group_Buying_Controller {
 		$notifications[self::NOTIFICATION_TYPE] = array(
 			'name' => self::__( 'SMS Alert: Purchase Notes' ),
 			'description' => self::__( "Customize the SMS notification that is sent when a customer completes a checkout." ),
-			'shortcodes' => array( 'date', 'name', 'username', 'site_title', 'site_url', 'deal_url', 'deal_title', 'checkout_note' ),
+			'shortcodes' => array( 'date', 'name', 'username', 'site_title', 'site_url', 'deal_url', 'deal_title', 'checkout_note', 'merchant_name', 'item_name' ),
 			'default_title' => self::__( 'SMS Alert: Purchase Notes' ),
 			'default_content' => '',
 			'allow_preference' => FALSE
