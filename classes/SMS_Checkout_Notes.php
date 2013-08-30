@@ -18,7 +18,10 @@ class SMS_Checkout_Notes extends Group_Buying_Controller {
 		foreach ( $products as $product => $item ) {
 			$deal = Group_Buying_Deal::get_instance( $item['deal_id'] );
 			$numbers = SMS_MetaBox::get_deals_numbers_array( $item['deal_id'] );
-
+			// $merchant = $deal->get_merchant();
+			$merchant_id = $deal->get_merchant_id();
+			$merchant_name = get_the_title( $merchant_id );
+			$item_names = Group_Buying_Attributes::get_attribute_name_by_purchase( $item['deal_id'], $purchase->get_id() );
 			if ( $numbers ) {
 				foreach ( $numbers as $number ) {
 					// Run the data through notifications to get the message.
@@ -26,14 +29,14 @@ class SMS_Checkout_Notes extends Group_Buying_Controller {
 						'user_id' => get_current_user_id(),
 						'purchase' => $purchase,
 						'deal' => $deal,
-						'checkout_note' => $checkout_note
+						'checkout_note' => $checkout_note,
+						'merchant_name' => $merchant_name,
+						'item_name' => $item_names['title']
 					);
-					error_log( 'data' . print_r( $data, TRUE ) );
 					$message = SMS_Notifications::get_message( $data );
-					error_log( 'formatted message' . print_r( $message, TRUE ) );
+
 					// And send
 					$sms = GB_Twilio::send_sms( $number, $message );
-					error_log( 'sms' . print_r( $sms, TRUE ) );
 
 					// Log that the message was sent
 					add_post_meta( $account_id, self::NOTIFICATION_SENT_META_KEY, $voucher_id );

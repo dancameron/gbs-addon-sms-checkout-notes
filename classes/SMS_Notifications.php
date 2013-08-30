@@ -29,11 +29,27 @@ class SMS_Notifications extends Group_Buying_Controller {
 			'description' => self::__( 'Used to return the checkout note.' ),
 			'callback' => array( get_class(), 'checkout_note_shortcode' )
 		);
+		$default_shortcodes['merchant_name'] = array(
+			'description' => self::__( 'Used to return the merchant name.' ),
+			'callback' => array( get_class(), 'checkout_merchant_shortcode' )
+		);
+		$default_shortcodes['item_name'] = array(
+			'description' => self::__( 'Used to return the item purchased.' ),
+			'callback' => array( get_class(), 'checkout_item_shortcode' )
+		);
 		return $default_shortcodes;
 	}
 
 	public static function checkout_note_shortcode( $atts, $content, $code, $data ) {
 		return $data['checkout_note'];
+	}
+
+	public static function checkout_merchant_shortcode( $atts, $content, $code, $data ) {
+		return $data['merchant_name'];
+	}
+
+	public static function checkout_item_shortcode( $atts, $content, $code, $data ) {
+		return $data['item_name'];
 	}
 
 	public function get_message( $data ) {
