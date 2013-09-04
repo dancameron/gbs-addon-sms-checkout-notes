@@ -15,7 +15,7 @@ class GB_Twilio extends Group_Buying_Controller {
 
 			try {
 				self::$twilio = new Services_Twilio( $account_sid, $auth_token );
-			} catch (Exception $e) {
+			} catch ( Exception $e ) {
 				error_log( "exception caught: " . print_r( $e->getMessage(), true ) );
 			}
 		}
@@ -29,25 +29,31 @@ class GB_Twilio extends Group_Buying_Controller {
 			return;
 		}
 
-		try {
-			$twilio_client = self::init_twilio();
+		$messages = self::sms_chunk_split( $message );
+		foreach ( $messages as $message ) {
+			try {
+				$twilio_client = self::init_twilio();
 
-			SMS_Options::init();
-			$twilio_number = '+'.preg_replace( "/[^0-9]/", '', SMS_Options::$twilio_number ); // Your Twilio auth token
+				SMS_Options::init();
+				$twilio_number = '+'.preg_replace( "/[^0-9]/", '', SMS_Options::$twilio_number ); // Your Twilio auth token
 
-			$message = $twilio_client->account->sms_messages->create(
-				$twilio_number, // From a Twilio number in your account
-				$formatted_mobile_number,
-				$message
-			);
+				$message = $twilio_client->account->sms_messages->create(
+					$twilio_number, // From a Twilio number in your account
+					$formatted_mobile_number,
+					$message
+				);
 
-		} catch (Exception $e) {
-			error_log( "exception caught: " . print_r( $e->getMessage(), true ) );
-			return FALSE;
+			} catch ( Exception $e ) {
+				error_log( "exception caught: " . print_r( $e->getMessage(), true ) );
+				return FALSE;
+			}
 		}
+		return TRUE;
+	}
 
-		return $message;
-
-
+	private function sms_chunk_split( $message ) {
+		$message = preg_replace( '/[\r\n]+/', ' ', $message );
+		$chunks = wordwrap( $message, 160, '\n' );
+		return explode( '\n', $chunks );
 	}
 }
