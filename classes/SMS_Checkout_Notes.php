@@ -31,7 +31,9 @@ class SMS_Checkout_Notes extends Group_Buying_Controller {
 						'deal' => $deal,
 						'checkout_note' => $checkout_note,
 						'merchant_name' => $merchant_name,
-						'item_name' => $item_names['title']
+						'item_name' => $item_names['title'],
+						'item_qty' => $item['quantity'],
+						'item' => $item
 					);
 					$message = SMS_Notifications::get_message( $data );
 
